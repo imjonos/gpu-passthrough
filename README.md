@@ -1,4 +1,4 @@
-# gpu-passthrough
+# Gpu passthrough
 GPU Passthrough (Qemu) Intel + Nvidia + Prime
 
 # Installation 
