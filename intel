@@ -1,0 +1,4 @@
+#!/bin/bash
+sudo prime-select intel
+sudo cp /dev/null /lib/udev/rules.d/50-pm-nvidia.rules
+sudo reboot

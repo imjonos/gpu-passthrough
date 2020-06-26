@@ -1,0 +1,31 @@
+#!/bin/bash
+#rmmod nvidia_drm
+#rmmod nvidia_uvm
+#rmmod nvidia_modeset
+#rmmod nvidia
+#rmmod xhci_hcd
+#rmmod nvidia-gpu
+#rmmod i2c_nvidia_gpu
+#rmmod pcieport
+
+NVIDIA_CARD=(0000:00:01.0 0000:01:00.0 0000:01:00.1 0000:01:00.2 0000:01:00.3)
+for dev in ${NVIDIA_CARD[@]}
+do
+    echo 1 > /sys/bus/pci/devices/$dev/remove
+done
+echo 1 > /sys/bus/pci/rescan
+sleep 1
+
+modprobe vfio
+modprobe vfio-pci
+
+for dev in ${NVIDIA_CARD[@]}
+do
+    vendor=$(cat /sys/bus/pci/devices/$dev/vendor)
+    device=$(cat /sys/bus/pci/devices/$dev/device)
+    if [ -e /sys/bus/pci/devices/$dev/driver ]
+    then
+        echo $dev > /sys/bus/pci/devices/$dev/driver/unbind
+    fi
+    echo $vendor $device > /sys/bus/pci/drivers/vfio-pci/new_id
+done
